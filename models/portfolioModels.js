@@ -64,5 +64,5 @@ const Project = mongoose.model("projects", projectsSchema);
 module.exports = {
   Intro,
   About,
-  Project
+  Project,
 };

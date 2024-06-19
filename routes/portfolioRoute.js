@@ -1,18 +1,21 @@
 const express = require('express');
 const router = express.Router();
 // Import models here - Ensure the path matches your model file
-const { Intro, About, Project } = require('../models/portfolioModels'); 
+const { Intro, About, Project } = require('../models/portfolioModels');
 
 router.get('/get-portfolio-data', async (req, res) => {
   try {
-    const intros = await Intro.find();
-    const abouts = await About.find();
+    // Fetch intros and abouts concurrently (optional for potential performance optimization)
+    const [intros, abouts] = await Promise.all([Intro.find(), About.find()]);
+
+    // Fetch projects separately (optional for potential modularity)
     const projects = await Project.find();
 
+    // Assemble the final response with desired order
     const portfolioData = {
-      intros,
-      abouts,
-      projects
+      intros: intros, // Access the full array of intro data
+      abouts: abouts, // Access the full array of about data
+      projects: projects,
     };
 
     res.status(200).json(portfolioData);
